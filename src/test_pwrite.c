@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
     if (n >= 0) {
         die("expect n == -1 but: %d", n);
     }
+
     if (errno != ENOSPC) {
         die("expect errno == ENOSPC but: %s", strerror(errno));
     }
