@@ -1,4 +1,5 @@
-#include <string.h>
+#include "util.h"
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,8 +13,7 @@ int main(int argc, char **argv) {
 
     int fd = open("t", O_RDWR, 0640);
     if (fd < 0) {
-        printf("error open\n");
-        exit(1);
+        die("open");
     }
 
     char buf[1];
@@ -23,8 +23,7 @@ int main(int argc, char **argv) {
     printf("buf[0] = %c\n", buf[0]);
 
     if (buf[0] != '2') {
-        printf("pread_error does not work\n");
-        exit(1);
+        die("buf[0] should be 2");
     }
 
     printf("passed\n");
