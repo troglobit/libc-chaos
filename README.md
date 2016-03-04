@@ -11,7 +11,9 @@ This library is still in alpha phase.
 ```
 make
 
-ERROR_RATE=100 LD_PRELOAD=$PWD/libchaos.so PREAD_ERROR=io path/to/your/executable
+# The following line makes calling pread() have 20% chance to return an EIO error.
+
+ERROR_RATE=20 LD_PRELOAD=$PWD/libchaos.so PREAD_ERROR=io path/to/your/executable
 ```
 
 # Control Error Emission with Environment Variables
