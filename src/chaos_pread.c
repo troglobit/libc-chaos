@@ -30,6 +30,18 @@ ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset) {
                 goto exit;
             }
 
+            if (strcmp(pwrite_error, "io") == 0) {
+                ret = -1;
+                errno = EIO;
+                goto exit;
+            }
+
+            if (strcmp(pwrite_error, "intr") == 0) {
+                ret = -1;
+                errno = EINTR;
+                goto exit;
+            }
+
         }
     }
 
@@ -47,6 +59,24 @@ ssize_t pread(int fd, void *buf, size_t count, off_t offset) {
     chaos_pread_t ori_pread = (chaos_pread_t)dlsym(RTLD_NEXT, "pread");
     char *b = buf;
 
+    if (if_emit()) {
+
+        if (pread_error != NULL) {
+
+            if (strcmp(pread_error, "io") == 0) {
+                ret = -1;
+                errno = EIO;
+                goto exit;
+            }
+
+            if (strcmp(pread_error, "intr") == 0) {
+                ret = -1;
+                errno = EINTR;
+                goto exit;
+            }
+        }
+    }
+
     ret = ori_pread(fd, buf, count, offset);
 
     if (if_emit()) {
@@ -59,9 +89,10 @@ ssize_t pread(int fd, void *buf, size_t count, off_t offset) {
                     b[n % ret] += 1;
                 }
             }
-
         }
     }
+
+exit:
 
     return ret;
 }
