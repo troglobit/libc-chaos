@@ -1,6 +1,6 @@
 ERROR_SETTING = ERROR_RATE=100 LD_PRELOAD=$(PWD)/libchaos.so
 all:
-	gcc -Wall -Werror -shared -fPIC src/chaos_pread.c -o libchaos.so -ldl
+	gcc -Wall -Werror -shared -fPIC src/chaos.c -o libchaos.so -ldl
 
 test: all
 	gcc src/test_pread_intr.c -o test_pread_intr
