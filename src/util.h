@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 
 #define dd(fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
@@ -53,3 +54,8 @@
         return 0;                                                             \
     }
 
+static inline int64_t get_now_ms() {
+    struct timeval t0;
+    gettimeofday(&t0, NULL);
+    return t0.tv_sec * 1000 + t0.tv_usec / 1000;
+}
