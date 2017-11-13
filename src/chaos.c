@@ -10,6 +10,9 @@
 #include <unistd.h>
 #include <string.h>
 
+#define xstr(s) str(s)
+#define str(s) #s
+
 typedef ssize_t (*chaos_pwrite_t)(int fd, const void *buf, size_t count, off_t offset);
 typedef ssize_t (*chaos_pread_t)(int fd, void *buf, size_t count, off_t offset);
 
@@ -72,42 +75,46 @@ static void post_wrap(const char *error_type, int isread, char *buf, ssize_t len
      }
 }
 
-ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset) {
+#define write_wrapper(fn, mode, args...)			\
+     {								\
+	  ssize_t ret;						\
+	  ssize_t (*sysc)() = dlsym(RTLD_NEXT, xstr(fn));	\
+	  							\
+	  if (if_emit()) {					\
+	       ret = pre_wrap(getenv(mode), 0);			\
+	       if (ret)						\
+		    return ret;					\
+	  }							\
+	  							\
+	  return sysc(args);					\
+     }
 
-    ssize_t ret;
-    chaos_pwrite_t ori_pwrite = (chaos_pwrite_t)dlsym(RTLD_NEXT, "pwrite");
-    int emit = if_emit();
+#define read_wrapper(fn, mode, args...)				\
+     {								\
+	  int emit;						\
+	  ssize_t ret;						\
+	  ssize_t (*sysc)() = dlsym(RTLD_NEXT, xstr(fn));	\
+								\
+	  emit = if_emit();					\
+	  if (emit) {						\
+	       ret = pre_wrap(getenv(mode), 1);			\
+	       if (ret)						\
+		    return ret;					\
+	  }							\
+								\
+	  ret = sysc(args);					\
+								\
+	  if (emit)						\
+	       post_wrap(getenv(mode), 1, buf, ret);		\
+								\
+	  return ret;						\
+     }
 
-    if (emit) {
-	 ret = pre_wrap(getenv(PWRITE_ERROR), 0);
-	 if (ret)
-	      return ret;
-    }
+ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset)
+     write_wrapper(pwrite, PWRITE_ERROR, fd, buf, count, offset);
 
-    ret = ori_pwrite(fd, buf, count, offset);
-
-    return ret;
-}
-
-ssize_t pread(int fd, void *buf, size_t count, off_t offset) {
-
-    ssize_t ret;
-    chaos_pread_t ori_pread = (chaos_pread_t)dlsym(RTLD_NEXT, "pread");
-    int emit = if_emit();
-
-    if (emit) {
-	 ret = pre_wrap(getenv(PREAD_ERROR), 1);
-	 if (ret)
-	      return ret;
-    }
-
-    ret = ori_pread(fd, buf, count, offset);
-
-    if (emit)
-	 post_wrap(getenv(PREAD_ERROR), 1, buf, ret);
-
-    return ret;
-}
+ssize_t pread(int fd, void *buf, size_t count, off_t offset)
+     read_wrapper(pread, PREAD_ERROR, fd, buf, count, offset);
 
 static int if_emit() {
     int rate = get_env_error_rate();
