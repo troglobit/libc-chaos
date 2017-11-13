@@ -1,9 +1,7 @@
 #define _GNU_SOURCE
-
 #include "chaos.h"
 
 #include <dlfcn.h>
-
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +15,7 @@ typedef ssize_t (*chaos_pwrite_t)(int fd, const void *buf, size_t count, off_t o
 typedef ssize_t (*chaos_pread_t)(int fd, void *buf, size_t count, off_t offset);
 
 static int if_emit();
-static int get_env_error_rate();
+static int error_rate();
 
 static int pre_wrap(char *error_type, int isread)
 {
@@ -122,26 +120,24 @@ ssize_t write(int fd, const void *buf, size_t count)
 ssize_t read(int fd, void *buf, size_t count)
      read_wrapper(read, READ_ERROR, fd, buf, count);
 
-static int if_emit() {
-    int rate = get_env_error_rate();
-    return ((rand() % 100) < rate);
+static int if_emit(void)
+{
+    return ((rand() % 100) < error_rate());
 }
 
-static int get_env_error_rate() {
-
-    const char *error_rate = getenv("ERROR_RATE");
+static int error_rate(void)
+{
     int rate = 10; /* percentage */
+    const char *error_rate;
 
-    if (error_rate != NULL) {
+    error_rate = getenv("ERROR_RATE");
+    if (error_rate)
        rate = atoi(error_rate);
-    }
 
-    if (rate > 100) {
+    if (rate > 100)
         rate = 100;
-    }
-
-    if (rate < 0) {
+    if (rate < 0)
         rate = 0;
-    }
+
     return rate;
 }
