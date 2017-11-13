@@ -32,6 +32,7 @@
         errno = 0;                                                            \
         statement                                                             \
                                                                               \
+        close(fd);                                                            \
         dd("passed");                                                         \
         unlink("t");                                                          \
                                                                               \
@@ -49,6 +50,7 @@
                                                                               \
         statement                                                             \
                                                                               \
+        close(fd);                                                            \
         dd("passed");                                                         \
         unlink("t");                                                          \
                                                                               \
