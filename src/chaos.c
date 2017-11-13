@@ -16,55 +16,75 @@ typedef ssize_t (*chaos_pread_t)(int fd, void *buf, size_t count, off_t offset);
 static int if_emit();
 static int get_env_error_rate();
 
+static int pre_wrap(char *error_type, int isread)
+{
+     errno = 0;
+     if (!error_type)
+	  return 0;
+
+     if (!strcmp(error_type, ERR_HANG)) {
+	  int sec;
+	  char *hang;
+
+	  hang = getenv(HANG_TIME);
+	  if (!hang)
+	       hang = "1";
+
+	  sec = atoi(hang);
+	  sleep(sec);
+
+	  return 0;
+     }
+
+     if (!strcmp(error_type, ERR_IO)) {
+	  errno = EIO;
+	  return -1;
+     }
+
+     if (!strcmp(error_type, ERR_INTR)) {
+	  errno = EINTR;
+	  return -1;
+     }
+
+     if (isread)
+	  return 0;
+
+     /*** Only write() errors below this point ************************/
+
+     if (!strcmp(error_type, ERR_NO_SPACE)) {
+	  errno = ENOSPC;
+	  return -1;
+     }
+
+     return 0;
+}
+
+static void post_wrap(const char *error_type, int isread, char *buf, ssize_t len)
+{
+     if (!error_type)
+	  return;
+
+     if (!strcmp(error_type, ERR_WRONG_BYTE)) {
+	  if (len <= 0)
+	       return;
+
+	  buf[rand() % len] += 1;
+     }
+}
+
 ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset) {
 
     ssize_t ret;
-    const char *pwrite_error = getenv(PWRITE_ERROR);
     chaos_pwrite_t ori_pwrite = (chaos_pwrite_t)dlsym(RTLD_NEXT, "pwrite");
     int emit = if_emit();
 
     if (emit) {
-
-        if (pwrite_error != NULL) {
-
-            if (strcmp(pwrite_error, ERR_HANG) == 0) {
-
-                char *hang = getenv(HANG_TIME);
-                if (hang == NULL) {
-                    hang = "1";
-                }
-
-                int hang_sec = atoi(hang);
-                sleep(hang_sec);
-                emit = 0;
-                goto run;
-            }
-
-            if (strcmp(pwrite_error, ERR_NO_SPACE) == 0) {
-                ret = -1;
-                errno = ENOSPC;
-                goto exit;
-            }
-
-            if (strcmp(pwrite_error, ERR_IO) == 0) {
-                ret = -1;
-                errno = EIO;
-                goto exit;
-            }
-
-            if (strcmp(pwrite_error, ERR_INTR) == 0) {
-                ret = -1;
-                errno = EINTR;
-                goto exit;
-            }
-        }
+	 ret = pre_wrap(getenv(PWRITE_ERROR), 0);
+	 if (ret)
+	      return ret;
     }
 
-run:
-
     ret = ori_pwrite(fd, buf, count, offset);
-
-exit:
 
     return ret;
 }
@@ -72,60 +92,19 @@ exit:
 ssize_t pread(int fd, void *buf, size_t count, off_t offset) {
 
     ssize_t ret;
-    const char *pread_error = getenv(PREAD_ERROR);
     chaos_pread_t ori_pread = (chaos_pread_t)dlsym(RTLD_NEXT, "pread");
-    char *b = buf;
     int emit = if_emit();
 
     if (emit) {
-
-        if (pread_error != NULL) {
-
-            if (strcmp(pread_error, ERR_HANG) == 0) {
-
-                char *hang = getenv(HANG_TIME);
-                if (hang == NULL) {
-                    hang = "1";
-                }
-
-                int hang_sec = atoi(hang);
-                sleep(hang_sec);
-                emit = 0;
-                goto run;
-            }
-
-            if (strcmp(pread_error, ERR_IO) == 0) {
-                ret = -1;
-                errno = EIO;
-                goto exit;
-            }
-
-            if (strcmp(pread_error, ERR_INTR) == 0) {
-                ret = -1;
-                errno = EINTR;
-                goto exit;
-            }
-        }
+	 ret = pre_wrap(getenv(PREAD_ERROR), 1);
+	 if (ret)
+	      return ret;
     }
-
-run:
 
     ret = ori_pread(fd, buf, count, offset);
 
-    if (emit) {
-
-        if (pread_error != NULL) {
-
-            if (strcmp(pread_error, ERR_WRONG_BYTE) == 0) {
-                if (ret > 0) {
-                    int n = rand();
-                    b[n % ret] += 1;
-                }
-            }
-        }
-    }
-
-exit:
+    if (emit)
+	 post_wrap(getenv(PREAD_ERROR), 1, buf, ret);
 
     return ret;
 }
