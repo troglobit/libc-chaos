@@ -3,6 +3,8 @@
 
 #define PWRITE_ERROR        "PWRITE_ERROR"
 #define PREAD_ERROR         "PREAD_ERROR"
+#define WRITE_ERROR         "WRITE_ERROR"
+#define READ_ERROR          "READ_ERROR"
 #define ERROR_RATE          "ERROR_RATE"
 #define HANG_TIME           "HANG_TIME"
 

@@ -116,6 +116,12 @@ ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset)
 ssize_t pread(int fd, void *buf, size_t count, off_t offset)
      read_wrapper(pread, PREAD_ERROR, fd, buf, count, offset);
 
+ssize_t write(int fd, const void *buf, size_t count)
+     write_wrapper(write, WRITE_ERROR, fd, buf, count);
+
+ssize_t read(int fd, void *buf, size_t count)
+     read_wrapper(read, READ_ERROR, fd, buf, count);
+
 static int if_emit() {
     int rate = get_env_error_rate();
     return ((rand() % 100) < rate);
