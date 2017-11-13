@@ -11,7 +11,7 @@ test: all
 	gcc src/test_pwrite_io.c -o test_pwrite_io
 	gcc src/test_pwrite_no_space.c -o test_pwrite_no_space
 	gcc src/test_pwrite_intr.c -o test_pwrite_intr
-	$(ERROR_SETTING) PREAD_ERROR=hang HANG_TIME=2 ./test_pread_hang
+	$(ERROR_SETTING) PREAD_ERROR=hang READ_ERROR=hang HANG_TIME=2 ./test_pread_hang
 	$(ERROR_SETTING) PREAD_ERROR=intr ./test_pread_intr
 	$(ERROR_SETTING) PREAD_ERROR=io ./test_pread_io
 	$(ERROR_SETTING) PREAD_ERROR=wrong_byte ./test_pread_wrong_byte
