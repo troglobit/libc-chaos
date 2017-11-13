@@ -5,6 +5,8 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
+//#include <time.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -122,8 +124,19 @@ ssize_t write(int fd, const void *buf, size_t count)
 ssize_t read(int fd, void *buf, size_t count)
      read_wrapper(read, READ_ERROR, fd, buf, count);
 
+#define rol32(data,shift) ((data) >> (shift)) | ((data) << (32 - (shift)))
+
 static int if_emit(void)
 {
+    struct timeval tv;
+    unsigned int seed;
+
+    gettimeofday(&tv, NULL);
+    seed = 1000000 * tv.tv_sec + tv.tv_usec;
+//  seed = time(NULL) ^ gethostid();
+    seed = rol32(seed, seed);
+    srand(seed);
+
     return ((rand() % 100) < error_rate());
 }
 
