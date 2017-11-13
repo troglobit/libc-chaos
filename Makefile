@@ -1,4 +1,4 @@
-ERROR_SETTING = ERROR_RATE=100 LD_PRELOAD=$(PWD)/libchaos.so
+ERROR_SETTING = LD_PRELOAD=$(PWD)/libchaos.so ERROR_RATE=100
 all:
 	gcc -Wall -Werror -shared -fPIC src/chaos.c -o libchaos.so -ldl
 
