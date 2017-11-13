@@ -62,6 +62,8 @@ static int pre_wrap(char *error_type, int isread)
 
 static void post_wrap(const char *error_type, int isread, char *buf, ssize_t len)
 {
+    (void)isread;
+
      if (!error_type)
 	  return;
 
