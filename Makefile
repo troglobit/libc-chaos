@@ -1,9 +1,9 @@
 all:
-	gcc -W -Wall -Werror -shared -fPIC src/chaos.c -o libchaos.so -ldl
+	$(MAKE) -C src $@
 
 test: all
 	$(MAKE) -C test $@
 
 clean:
+	$(MAKE) -C src $@
 	$(MAKE) -C test $@
-	rm libchaos.so test/pread_* test/pwrite_*
