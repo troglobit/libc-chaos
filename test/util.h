@@ -9,13 +9,15 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-#define dd(fmt, args...)                        \
-    printf(fmt "\n", ##args)
+extern char *__progname;
 
-#define die(fmt, args...)                       \
-    do {                                        \
-        fprintf(stderr, fmt "\n", ##args);      \
-        exit(1);                                \
+#define dd(fmt, args...)                        		\
+    printf("%s: " fmt "\n", __progname, ##args)
+
+#define die(fmt, args...)					\
+    do {							\
+        fprintf(stderr, "%s: " fmt "\n", __progname, ##args);	\
+        exit(1);						\
     } while (0)
 
 #define test_read_pre()                         \
