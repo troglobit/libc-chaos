@@ -7,10 +7,11 @@ LIBNAME  = libchaos.so
 all: $(LIBNAME)
 
 $(LIBNAME): $(OBJS)
-	$(CC) $(CFLAGS) -shared $(OBJS) -o $@ $(LIBS)
+	@printf "  LIB     $@\n"
+	@$(CC) $(CFLAGS) -shared $(OBJS) -o $@ $(LIBS)
 
 clean:
-	$(RM) $(LIBNAME)
+	@$(RM) $(LIBNAME) *.o
 
 distclean: clean
-	$(RM) *.o *~
+	@$(RM) *~

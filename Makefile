@@ -1,9 +1,9 @@
 all:
-	$(MAKE) -C src $@
+	@$(MAKE) -C src $@
 
 check test: all
-	$(MAKE) -C test $@
+	@$(MAKE) -C test $@
 
 clean distclean:
-	$(MAKE) -C src $@
-	$(MAKE) -C test $@
+	@$(MAKE) -C src $@
+	@$(MAKE) -C test $@
