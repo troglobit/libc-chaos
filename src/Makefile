@@ -1,5 +1,5 @@
 CFLAGS   = -g -fPIC
-CPPFLAGS = -W -Wall -Werror
+CPPFLAGS = -W -Wall -Wextra
 OBJS     = chaos.o
 LIBS     = -ldl
 LIBNAME  = libchaos.so
