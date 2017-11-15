@@ -4,6 +4,6 @@ all:
 check test: all
 	$(MAKE) -C test $@
 
-clean:
+clean distclean:
 	$(MAKE) -C src $@
 	$(MAKE) -C test $@

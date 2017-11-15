@@ -11,3 +11,6 @@ $(LIBNAME): $(OBJS)
 
 clean:
 	$(RM) $(LIBNAME)
+
+distclean: clean
+	$(RM) *.o *~

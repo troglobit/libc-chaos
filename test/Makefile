@@ -18,3 +18,6 @@ check test: all
 
 clean:
 	$(RM) $(EXEC)
+
+distclean: clean
+	$(RM) *.o *~
