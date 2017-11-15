@@ -2,11 +2,11 @@
 
 Wrap libc function and emit error return randomly, in order to simulate a unstable underlaying system.
 
-# Status
+## Status
 
 This library is still in alpha phase.
 
-# Synopsis
+## Synopsis
 
 ```
 make
@@ -16,7 +16,7 @@ make
 ERROR_RATE=20 LD_PRELOAD=$PWD/libchaos.so PREAD_ERROR=io path/to/your/executable
 ```
 
-# Control Error Emission with Environment Variables
+## Control Error Emission with Environment Variables
 
 -   `ERROR_RATE`
 defines the rate in percentage at what a function call emits an error.
@@ -41,11 +41,12 @@ Its value could be one of:
     -   `intr` emits an `EINTR` error.
 
 
-# Author
+## Authors
 
-Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
+- Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
+- Joachim Nilsson <troglobit@gmail.com>
 
-# Copyright and License
+## Copyright and License
 
 The MIT License (MIT)
 
