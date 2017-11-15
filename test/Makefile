@@ -6,7 +6,7 @@ EXEC     =  pread_hang  pread_io  pread_intr  pread_wrong_byte	\
 
 all: $(EXEC)
 
-test: all
+check test: all
 	$(RUN) PREAD_ERROR=hang READ_ERROR=hang HANG_TIME=2 ./pread_hang
 	$(RUN) PREAD_ERROR=intr                             ./pread_intr
 	$(RUN) PREAD_ERROR=io                               ./pread_io
