@@ -1,8 +1,9 @@
-CFLAGS   = -g -fPIC
-CPPFLAGS = -W -Wall -Wextra
-OBJS     = chaos.o
-LIBS     = -ldl
-LIBNAME  = libchaos.so
+include ../build.mk
+
+CFLAGS   += -fPIC
+OBJS      = chaos.o
+LIBS      = -ldl
+LIBNAME   = libchaos.so
 
 all: $(LIBNAME)
 

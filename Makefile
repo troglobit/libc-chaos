@@ -1,3 +1,5 @@
+include build.mk
+
 all:
 	@$(MAKE) -C src $@
 
