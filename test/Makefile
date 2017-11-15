@@ -15,3 +15,6 @@ check test: all
 	$(RUN) PWRITE_ERROR=intr                            ./pwrite_intr
 	$(RUN) PWRITE_ERROR=io                              ./pwrite_io
 	$(RUN) PWRITE_ERROR=no_space                        ./pwrite_no_space
+
+clean:
+	$(RM) $(EXEC)
