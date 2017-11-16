@@ -1,7 +1,7 @@
 include ../build.mk
 
-RUN      = LD_PRELOAD=../src/libchaos.so ERROR_RATE=100
-EXEC     =  pread_hang  pread_io  pread_intr  pread_wrong_byte	\
+RUN       = LD_PRELOAD=../src/libchaos.so ERROR_RATE=100
+EXEC      = pread_hang  pread_io  pread_intr  pread_wrong_byte	\
 	    pwrite_hang pwrite_io pwrite_intr pwrite_no_space
 
 all: $(EXEC)
