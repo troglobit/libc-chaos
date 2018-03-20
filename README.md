@@ -1,10 +1,16 @@
 # libc-chaos
 
-Wrap libc function and emit error return randomly, in order to simulate a unstable underlaying system.
+Wraps libc functions to return errors randomly to simulate an unstable
+underlaying system.
 
 ## Status
 
-This library is still in alpha phase.
+This library is still in alpha phase supporting the following functions:
+
+- pwrite()
+- pread()
+- write()
+- read()
 
 ## Synopsis
 
