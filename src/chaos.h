@@ -1,5 +1,5 @@
-#ifndef __CHAOS_H__
-#define __CHAOS_H__
+#ifndef CHAOS_H_
+#define CHAOS_H_
 
 #define PWRITE_ERROR        "PWRITE_ERROR"
 #define PREAD_ERROR         "PREAD_ERROR"
@@ -14,4 +14,4 @@
 #define ERR_WRONG_BYTE      "wrong_byte"
 #define ERR_NO_SPACE        "no_space"
 
-#endif /* __CHAOS_H__ */
+#endif /* CHAOS_H_ */
