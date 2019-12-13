@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-//#include <time.h>
+#include <sys/uio.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -98,6 +98,34 @@ static void post_wrap(const char *error_type, int isread, char *buf, ssize_t len
      }
 }
 
+static void postv_wrap(const char *error_type, int isread, const struct iovec *iov, int iovcnt, ssize_t len)
+{
+    (void)isread;
+
+     if (!error_type)
+	  return;
+
+     if (!strcmp(error_type, ERR_WRONG_BYTE)) {
+	  int i;
+
+	  if (len <= 0)
+	       return;
+
+	  for (i = 0; i < iovcnt; i++) {
+	       char *buf;
+
+	       if (iov[i].iov_len <= (size_t)len) {
+		    len -= iov[i].iov_len;
+		    continue;
+	       }
+
+	       buf = (char *)iov[i].iov_base;
+	       buf[rand() % len] += 1;
+	       break;
+	  }
+     }
+}
+
 #define write_wrapper(fn, mode, args...)			\
      {								\
 	  ssize_t ret;						\
@@ -133,6 +161,27 @@ static void post_wrap(const char *error_type, int isread, char *buf, ssize_t len
 	  return ret;						\
      }
 
+#define readv_wrapper(fn, mode, args...)			\
+     {								\
+	  int emit;						\
+	  ssize_t ret;						\
+	  ssize_t (*sysc)() = dlsym(RTLD_NEXT, xstr(fn));	\
+								\
+	  emit = if_emit();					\
+	  if (emit) {						\
+	       ret = pre_wrap(getenv(mode), 1);			\
+	       if (ret)						\
+		    return ret;					\
+	  }							\
+								\
+	  ret = sysc(args);					\
+								\
+	  if (emit)						\
+	       postv_wrap(getenv(mode), 1, iov, iovcnt, ret);	\
+								\
+	  return ret;						\
+     }
+
 ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset)
      write_wrapper(pwrite, PWRITE_ERROR, fd, buf, count, offset);
 
@@ -144,6 +193,12 @@ ssize_t write(int fd, const void *buf, size_t count)
 
 ssize_t read(int fd, void *buf, size_t count)
      read_wrapper(read, READ_ERROR, fd, buf, count);
+
+ssize_t writev(int fd, const struct iovec *iov, int iovcnt)
+     write_wrapper(writev, WRITEV_ERROR, fd, iov, iovcnt);
+
+ssize_t readv(int fd, const struct iovec *iov, int iovcnt)
+     readv_wrapper(readv, READV_ERROR, fd, iov, iovcnt);
 
 #define rol32(data,shift) ((data) >> (shift)) | ((data) << (32 - (shift)))
 
@@ -164,11 +219,11 @@ static int if_emit(void)
 static int error_rate(void)
 {
     int rate = 10; /* percentage */
-    const char *error_rate;
+    const char *env;
 
-    error_rate = getenv("ERROR_RATE");
-    if (error_rate)
-       rate = atoi(error_rate);
+    env = getenv("ERROR_RATE");
+    if (env)
+       rate = atoi(env);
 
     if (rate > 100)
         rate = 100;
