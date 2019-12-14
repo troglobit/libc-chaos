@@ -16,3 +16,5 @@ clean:
 
 distclean: clean
 	@$(RM) *~
+
+chaos.o: chaos.c chaos.h
