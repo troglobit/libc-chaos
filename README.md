@@ -1,7 +1,11 @@
 # libc-chaos
 
-Wraps libc functions to return errors randomly to simulate an unstable
-underlaying system.
+This is an MIT licensed `LD_PRELOAD` hack library that introduces random
+errors in certain libc I/O functions your application uses.
+
+The main purpose is to test how your application handles an unreliable
+file system.  It can also be used to locate hard-to-find bugs that only
+happen once in a blue moon by introducing unexpected delays.
 
 ## Status
 
@@ -54,7 +58,9 @@ Its value could be one of:
 
 ## Copyright and License
 
-The MIT License
-
-Copyright (c) 2015-2016  Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
+Copyright (c) 2015-2016  Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>  
 Copyright (c) 2017-2019  Joachim Nisson <troglobit@gmail.com>
+
+This library was initially written by 张炎泼 (Zhang Yanpo) who
+graciously released the software under the MIT license.  Later
+Joachim Nilsson picked it up and added a few more APIs.
