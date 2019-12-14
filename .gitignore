@@ -33,3 +33,9 @@
 
 # Debug files
 *.dSYM/
+
+# GNU global
+GPATH
+GRTAGS
+GTAGS
+ID
