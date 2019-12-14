@@ -27,8 +27,8 @@
 #define PREAD_ERROR         "PREAD_ERROR"
 #define WRITE_ERROR         "WRITE_ERROR"
 #define READ_ERROR          "READ_ERROR"
-#define WRITEV_ERROR        "WRITE_ERROR"
-#define READV_ERROR         "READ_ERROR"
+#define WRITEV_ERROR        "WRITEV_ERROR"
+#define READV_ERROR         "READV_ERROR"
 #define ERROR_RATE          "ERROR_RATE"
 #define HANG_TIME           "HANG_TIME"
 
