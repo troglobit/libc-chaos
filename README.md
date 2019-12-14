@@ -11,6 +11,8 @@ This library is still in alpha phase supporting the following functions:
 - pread()
 - write()
 - read()
+- writev()
+- readv()
 
 ## Synopsis
 
@@ -27,6 +29,9 @@ ERROR_RATE=20 LD_PRELOAD=$PWD/libchaos.so PREAD_ERROR=io path/to/your/executable
 -   `ERROR_RATE`
 defines the rate in percentage at what a function call emits an error.
 `0` makes it never emit an error.
+
+-   `HANG_TIME`
+defines the delay a function should always introduce before returning.
 
 -   `LD_PRELOAD=XXX`
 should be kept what it is. Never touch it unless you know what you do.
