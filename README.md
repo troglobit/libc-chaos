@@ -7,6 +7,7 @@ The main purpose is to test how your application handles an unreliable
 file system.  It can also be used to locate hard-to-find bugs that only
 happen once in a blue moon by introducing unexpected delays.
 
+
 ## Status
 
 This library is still in alpha phase supporting the following functions:
@@ -52,6 +53,7 @@ Its value could be one of:
     -   `nospace` emits an `ENOSPC` error.
     -   `io` emits an `EIO` error.
     -   `intr` emits an `EINTR` error.
+    -   `hang` wait `HANG_TIME` seconds before writing
 
 -   `PREAD_ERROR`
 defines what error to emit when calling `pread()`.
@@ -60,6 +62,19 @@ Its value could be one of:
         returning to caller.
     -   `io` emits an `EIO` error.
     -   `intr` emits an `EINTR` error.
+    -   `hang` wait `HANG_TIME` seconds before reading
+
+-   `READ_ERROR`
+same as above
+
+-   `WRITE_ERROR`
+same as above
+
+-   `READV_ERROR`
+same as above
+
+-   `WRITEV_ERROR`
+same as above
 
 
 ## Copyright and License
