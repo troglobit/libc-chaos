@@ -18,15 +18,21 @@ This library is still in alpha phase supporting the following functions:
 - writev()
 - readv()
 
-## Synopsis
+
+## Examples
+
+Make calling `pread()` have 20% chance to return an `EIO` error:
 
 ```
-make
-
-# The following line makes calling pread() have 20% chance to return an EIO error.
-
 ERROR_RATE=20 LD_PRELOAD=$PWD/libchaos.so PREAD_ERROR=io path/to/your/executable
 ```
+
+Introduce a 3 sec delay in all `writev()` calls:
+
+```
+HANG_TIME=3 WRITEV_ERROR="hang" LD_PRELOAD=$PWD/libchaos.so path/to/your/executable
+```
+
 
 ## Control Error Emission with Environment Variables
 
