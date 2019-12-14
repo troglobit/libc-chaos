@@ -47,13 +47,9 @@ Its value could be one of:
     -   `intr` emits an `EINTR` error.
 
 
-## Authors
-
-- Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
-- Joachim Nilsson <troglobit@gmail.com>
-
 ## Copyright and License
 
-The MIT License (MIT)
+The MIT License
 
-Copyright (c) 2015 Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
+Copyright (c) 2015-2016  Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
+Copyright (c) 2017-2019  Joachim Nisson <troglobit@gmail.com>
